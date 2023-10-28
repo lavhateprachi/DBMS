@@ -1,0 +1,290 @@
+
+mysql> create table dept(deptId int,deptName varchar(40),deptBlock varchar(40)); 
+
+mysql> desc dept;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| deptId    | int         | YES  |     | NULL    |       |
+| deptName  | varchar(40) | YES  |     | NULL    |       |
+| deptBlock | varchar(40) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+
+mysql> alter table dept add constraint primary key(deptId);
+
+mysql> insert into dept values(1,'Computer Science','B-Block'),
+    -> (2,'Information Technology','C-Block'),
+    -> (3,'Mechanical','A-Block'),
+    -> (4,'Electronic Communication','D-Block');
+
+mysql> create table teacher(id int primary key,name
+    -> varchar(20),deptId int,birthDate date);
+
+mysql> alter table teacher add constraint foreign key(deptId) references dept(deptId);
+
+
+mysql> desc teacher;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id        | int         | NO   | PRI | NULL    |       |
+| name      | varchar(20) | YES  |     | NULL    |       |
+| deptId    | int         | YES  | MUL | NULL    |       |
+| birthDate | date        | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+
+
+mysql> insert into teacher values(1,'Maria Gloria',2,'1994-03-12'),
+    -> (2,'John Smith',1,'1993-02-07'),
+    -> (3,'Gal Rao',4,'1992-09-11'),
+    -> (4,'Rama Saho',2,'1994-12-09'),
+    -> (5,'Maria Gaga',1,'1993-10-09');
+
+mysql> insert into teacher values
+    -> (3,'Gal Rao',4,'1992-09-11'),
+    -> (6,'Jakey Smith',2,'1990-08-31');
+
+
+mysql> select * from student;
++----+--------------+--------+------------+
+| id | name         | deptId | birthDate  |
++----+--------------+--------+------------+
+|  1 | Maria Gloria |      2 | 1994-03-12 |
+|  2 | John Smith   |      5 | 1993-02-07 |
+|  3 | Gal Rao      |      4 | 1992-09-11 |
+|  4 | Rama Saho    |      1 | 1994-12-09 |
+|  5 | Maria Gaga   |      5 | 1993-10-09 |
+|  6 | Jakey Smith  |      2 | 1990-08-31 |
++----+--------------+--------+------------+
+
+mysql> select * from dept;
++--------+--------------------------+-----------+
+| deptId | deptName                 | deptBlock |
++--------+--------------------------+-----------+
+|      1 | Computer Science         | B-Block   |
+|      2 | Information Technology   | C-Block   |
+|      3 | Mechanical               | A-Block   |
+|      4 | Electronic Communication | D-Block   |
++--------+--------------------------+-----------+
+
+
+mysql> select name,birthDate,deptName,deptBlock from student  inner join dept on student.deptId=dept.deptId;
++--------------+------------+--------------------------+-----------+
+| name         | birthDate  | deptName                 | deptBlock |
++--------------+------------+--------------------------+-----------+
+| Rama Saho    | 1994-12-09 | Computer Science         | B-Block   |
+| Maria Gloria | 1994-03-12 | Information Technology   | C-Block   |
+| Jakey Smith  | 1990-08-31 | Information Technology   | C-Block   |
+| John Smith   | 1993-02-07 | Electronic Communication | D-Block   |
+| Gal Rao      | 1992-09-11 | Electronic Communication | D-Block   |
+| Maria Gaga   | 1993-10-09 | Electronic Communication | D-Block   |
++--------------+------------+--------------------------+-----------+
+
+
+mysql> select name,id from student where name like '____a%';
++--------------+----+
+| name         | id |
++--------------+----+
+| Maria Gloria |  1 |
+| Maria Gaga   |  5 |
++--------------+----+
+
+
+mysql> select id,name,datediff(sysdate(),birthDate) as Age from student;
++----+--------------+-------+
+| id | name         | Age   |
++----+--------------+-------+
+|  1 | Maria Gloria | 10797 |
+|  2 | John Smith   | 11195 |
+|  3 | Gal Rao      | 11344 |
+|  4 | Rama Saho    | 10525 |
+|  5 | Maria Gaga   | 10951 |
+|  6 | Jakey Smith  | 12086 |
++----+--------------+-------+
+
+
+mysql> select id,name,birthDate,sysdate(), timestampdiff(YEAR,birthDate,sysdate()) as AGE from student;
++----+--------------+------------+---------------------+------+
+| id | name         | birthDate  | sysdate()           | AGE  |
++----+--------------+------------+---------------------+------+
+|  1 | Maria Gloria | 1994-03-12 | 2023-10-03 22:10:41 |   29 |
+|  2 | John Smith   | 1993-02-07 | 2023-10-03 22:10:41 |   30 |
+|  3 | Gal Rao      | 1992-09-11 | 2023-10-03 22:10:41 |   31 |
+|  4 | Rama Saho    | 1994-12-09 | 2023-10-03 22:10:41 |   28 |
+|  5 | Maria Gaga   | 1993-10-09 | 2023-10-03 22:10:41 |   29 |
+|  6 | Jakey Smith  | 1990-08-31 | 2023-10-03 22:10:41 |   33 |
++----+--------------+------------+---------------------+------+
+
+
+
+
+mysql> create table employee(emp_id int primary key,
+first_name varchar(20),
+last_name varchar(20),
+salary float,joining_date date,
+dept varchar(40));
+
+
+mysql> insert into employee values
+    -> (1,'Bob','Kinto',1000000,'2019-01-20','Finance'),
+    -> (2,'Jerry','Kansxo',6000000,'2019-01-15','IT'),
+    -> (3,'Philip','Jose',8900000,'2019-02-05','Banking'),
+    -> (4,'John','Abraham',2000000,'2019-02-25','Insurance'),
+    -> (5,'Micheal','Mathew',2200000,'2019-02-28','Finance'),
+    -> (6,'Alex','Chreketo',4000000,'2019-05-10','IT'),
+    -> (7,'Yohan','Soso',1230000,'2019-06-20','Banking');
+
+
+mysql> select * from employee;
++--------+------------+-----------+---------+--------------+-----------+
+| emp_id | first_name | last_name | salary  | joining_date | dept      |
++--------+------------+-----------+---------+--------------+-----------+
+|      1 | Bob        | Kinto     | 1000000 | 2019-01-20   | Finance   |
+|      2 | Jerry      | Kansxo    | 6000000 | 2019-01-15   | IT        |
+|      3 | Philip     | Jose      | 8900000 | 2019-02-05   | Banking   |
+|      4 | John       | Abraham   | 2000000 | 2019-02-25   | Insurance |
+|      5 | Micheal    | Mathew    | 2200000 | 2019-02-28   | Finance   |
+|      6 | Alex       | Chreketo  | 4000000 | 2019-05-10   | IT        |
+|      7 | Yohan      | Soso      | 1230000 | 2019-06-20   | Banking   |
++--------+------------+-----------+---------+--------------+-----------+
+
+
+mysql> create table reward(emp_ref int,date_reward date,amount float); 
+
+
+mysql> alter table reward add constraint foreign key(emp_ref) references
+    -> employee(emp_id);
+
+
+mysql> desc reward;
++-------------+-------+------+-----+---------+-------+
+| Field       | Type  | Null | Key | Default | Extra |
++-------------+-------+------+-----+---------+-------+
+| emp_ref     | int   | YES  | MUL | NULL    |       |
+| date_reward | date  | YES  |     | NULL    |       |
+| amount      | float | YES  |     | NULL    |       |
++-------------+-------+------+-----+---------+-------+
+
+
+mysql> select * from employee;
++--------+------------+-----------+---------+--------------+-----------+
+| emp_id | first_name | last_name | salary  | joining_date | dept      |
++--------+------------+-----------+---------+--------------+-----------+
+|      1 | Bob        | Kinto     | 1000000 | 2019-01-20   | Finance   |
+|      2 | Jerry      | Kansxo    | 6000000 | 2019-01-15   | IT        |
+|      3 | Philip     | Jose      | 8900000 | 2019-02-05   | Banking   |
+|      4 | John       | Abraham   | 2000000 | 2019-02-25   | Insurance |
+|      5 | Micheal    | Mathew    | 2200000 | 2019-02-28   | Finance   |
+|      6 | Alex       | Chreketo  | 4000000 | 2019-05-10   | IT        |
+|      7 | Yohan      | Soso      | 1230000 | 2019-06-20   | Banking   |
++--------+------------+-----------+---------+--------------+-----------+
+
+
+mysql> select first_name,last_name from employee;
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Bob        | Kinto     |
+| Jerry      | Kansxo    |
+| Philip     | Jose      |
+| John       | Abraham   |
+| Micheal    | Mathew    |
+| Alex       | Chreketo  |
+| Yohan      | Soso      |
++------------+-----------+
+
+
+mysql> select first_name as Employee_Name from employee;
++---------------+
+| Employee_Name |
++---------------+
+| Bob           |
+| Jerry         |
+| Philip        |
+| John          |
+| Micheal       |
+| Alex          |
+| Yohan         |
++---------------+
+
+mysql> select upper(last_name) as EMPLOYEE from employee;
++----------+
+| EMPLOYEE |
++----------+
+| KINTO    |
+| KANSXO   |
+| JOSE     |
+| ABRAHAM  |
+| MATHEW   |
+| CHREKETO |
+| SOSO     |
++----------+
+
+
+mysql> select lower(last_name) as EMPLOYEE from employee;
++----------+
+| EMPLOYEE |
++----------+
+| kinto    |
+| kansxo   |
+| jose     |
+| abraham  |
+| mathew   |
+| chreketo |
+| soso     |
++----------+
+
+
+mysql> alter table employee modify column dept varchar(40) unique;
+
+
+mysql> desc employee;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| emp_id       | int         | NO   | PRI | NULL    |       |
+| first_name   | varchar(20) | YES  |     | NULL    |       |
+| last_name    | varchar(20) | YES  |     | NULL    |       |
+| salary       | float       | YES  |     | NULL    |       |
+| joining_date | date        | YES  |     | NULL    |       |
+| dept         | varchar(40) | YES  | UNI | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+
+mysql> select first_name from employee where first_name like '____';
++------------+
+| first_name |
++------------+
+| John       |
+| Alex       |
++------------+
+
+mysql> select position('h' IN 'John') from employee;
++-------------------------+
+| position('h' IN 'John') |
++-------------------------+
+|                       3 |
+|                       3 |
+|                       3 |
+|                       3 |
++-------------------------+
+
+mysql> select rtrim(first_name) as RightTrimFirstName from employee;
++--------------------+
+| RightTrimFirstName |
++--------------------+
+| Bob                |
+| Philip             |
+| John               |
+| Alex               |
++--------------------+
+mysql> select ltrim(first_name) as LeftTrimFirstName from employee;
++--------------------+
+| RightTrimFirstName |
++--------------------+
+| Bob                |
+| Philip             |
+| John               |
+| Alex               |
++--------------------+
+
+
